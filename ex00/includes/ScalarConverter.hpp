@@ -13,6 +13,8 @@
 #pragma once
 
 #include <iostream>
+#include <iomanip>
+#include <limits>
 
 class ScalarConverter
 {

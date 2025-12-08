@@ -12,6 +12,8 @@
 
 #include "ScalarConverter.hpp"
 
+#define IMPOSSIBLE_MSG "char: impossible\nint: impossible\nfloat: impossible\ndouble: impossible"
+
 bool	isPseudoFloat(const std::string &s)
 {
 	return s == "inff" || s == "-inff" || s == "+inff" || s == "nanf";
@@ -19,7 +21,7 @@ bool	isPseudoFloat(const std::string &s)
 
 bool	isPseudoDouble(const std::string &s)
 {
-	return s == "inff" || s == "-inff" || s == "+inff" || s == "nanf";
+	return s == "inf" || s == "-inf" || s == "+inf" || s == "nan";
 }
 
 bool	isChar(const std::string &s)
@@ -65,14 +67,16 @@ static bool isFloat(const std::string &s)
 	return dot;
 }
 
-static bool isDouble(const std::string &s) {
+static bool isDouble(const std::string &s)
+{
 	bool dot = false;
 
 	int len = s.length();
 	for (int i = 0; i < len; i++)
 	{
 		if (s[i] == '.') {
-			if (dot) return false;
+			if (dot)
+				return false;
 			dot = true;
 		}
 		else if (!isdigit(s[i]) && s[i] != '+' && s[i] != '-')
@@ -81,83 +85,124 @@ static bool isDouble(const std::string &s) {
 	return dot;
 }
 
-void	printInfo(int n, float f, bool dot)
-{
-	std::string	after_num;
-	std::string	non;
-	if (dot)
-		after_num = "";
-	else
-		after_num = ".0";
-	if (isprint(n))
-		non = "";
-	else
-		non = "Non displayable";
-
-
-	std::cout << "char: " << (unsigned char)n << non << std::endl
-		<< "int: " << n << std::endl
-		<< "float: " << f << after_num << "f" << std::endl
-		<< "double: " << f << after_num << std::endl;
-}
-
-void	printInfoChar(char c)
-{
-	std::cout << "char: " << c << std::endl
-		<< "int: " << (unsigned int)c << std::endl
-		<< "float: " << (unsigned int)c << ".0f" << std::endl
-		<< "double: " << (unsigned int)c << ".0" << std::endl;
-}
-
-
 
 void	ScalarConverter::convert(std::string const &literal)
 {
-	int		i;
-	char	c;
-	float	f;
-	//double	d;
+	std::cout << std::fixed << std::setprecision(1);
 
 	if (isChar(literal))
 	{
-		c = literal.at(0);
-		printInfoChar(c);
-		return ;
-	}
-	std::cout << "HERE1" << std::endl;
-	if (literal.back() == 'f' )
-	{
-		i = std::stoi(literal);
-		f = std::stof(literal);
+		char c = literal[0];
 
-		std::cout << f / i << std::endl;
-
-		if (f / i != 1 && i != 0)
-			printInfo(i, f, true);
+		if (isprint(c))
+			std::cout << "char: " << c << std::endl;
 		else
-			printInfo(i, f, false);
+			std::cout << "char: Non displayable" << std::endl;
+		std::cout << "int: " << (int)c << std::endl;
+		std::cout << "float: " << (float)c << "f" << std::endl;
+		std::cout << "double: " << (double)c << std::endl;
 		return ;
 	}
-	std::cout << "HERE2" << std::endl;
-	if (literal.find(".") != std::string::npos)
+	if (isPseudoFloat(literal))
 	{
-		//std::cout << "double" << std::endl;
-		i = std::stoi(literal);
-		f = std::stof(literal);
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: " << literal << std::endl;
 
-		if (f / i != 1 && i != 0)
-			printInfo(i, f, true);
-		else
-			printInfo(i, f, false);
+		std::string _double = literal;
+		_double.pop_back();
+		std::cout << "double: " << _double << std::endl;
 		return ;
 	}
-	std::cout << "HERE" << std::endl;
-	try{
-		i = std::stoi(literal);
-	}
-	catch(std::exception &e)
+	if (isPseudoDouble(literal))
 	{
-		if (literal.find("inf") != std::string::npos || literal.find("nan") != std::string::npos)
-			std::cout << "imp" << std::endl;
+		std::cout << "char: impossible" << std::endl;
+		std::cout << "int: impossible" << std::endl;
+		std::cout << "float: " << literal << "f" << std::endl;
+		std::cout << "double: " << literal << std::endl;
+		return ;
 	}
+	if (isInt(literal))
+	{
+		long long	n;
+
+		try{
+			n = std::stoll(literal);
+		}	catch (...){
+			std::cout << IMPOSSIBLE_MSG << std::endl;
+			return;
+		}
+
+		if (n < 0 || n > 255)
+			std::cout << "char: impossible" << std::endl;
+		else if (!isprint((char)n))
+			std::cout << "char: Non displayable" << std::endl;
+		else
+			std::cout << "char: " << (char)n << "" << std::endl;
+
+		if (n < std::numeric_limits<int>::min() || n > std::numeric_limits<int>::max())
+			std::cout << "int: impossible" << std::endl;
+		else
+			std::cout << "int: " << n << std::endl;
+
+		std::cout << "float: " << (float)n << "f" << std::endl;
+		std::cout << "double: " << (double)n << std::endl;
+
+		return ;
+	}
+	if (isFloat(literal))
+	{
+		float	f;
+
+		try{
+			f = std::stof(literal);
+		}	catch (...){
+			std::cout << IMPOSSIBLE_MSG << std::endl;
+			return;
+		}
+
+		if (f < 0 || f > 255)
+			std::cout << "char: impossible" << std::endl;
+		else if (!isprint((char)f))
+			std::cout << "char: Non displayable" << std::endl;
+		else
+			std::cout << "char: " << (char)f << "" << std::endl;
+
+		if (f < std::numeric_limits<int>::min() || f > std::numeric_limits<int>::max())
+			std::cout << "int: impossible" << std::endl;
+		else
+			std::cout << "int: " << (int)f << std::endl;
+
+		std::cout << "float: " << f << "f" << std::endl;
+		std::cout << "double: " << (double)f << std::endl;
+		return ;
+	}
+	if (isDouble(literal))
+	{
+		double	d;
+
+		try{
+			d = std::stod(literal);
+		}	catch (...){
+			std::cout << IMPOSSIBLE_MSG << std::endl;
+			return;
+		}
+
+		if (d < 0 || d > 255)
+			std::cout << "char: impossible" << std::endl;
+		else if (!isprint((char)d))
+			std::cout << "char: Non displayable" << std::endl;
+		else
+			std::cout << "char: " << (char)d << "" << std::endl;
+
+		if (d < std::numeric_limits<int>::min() || d > std::numeric_limits<int>::max())
+			std::cout << "int: impossible" << std::endl;
+		else
+			std::cout << "int: " << (int)d << std::endl;
+
+		std::cout << "float: " << d << "f" << std::endl;
+		std::cout << "double: " << (double)d << std::endl;
+		return ;
+	}
+	std::cout << IMPOSSIBLE_MSG << std::endl;
 }
