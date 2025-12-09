@@ -6,7 +6,7 @@
 #    By: omizin <omizin@student.42heilbronn.de>     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/12/05 12:40:46 by omizin            #+#    #+#              #
-#    Updated: 2025/12/05 12:59:09 by omizin           ###   ########.fr        #
+#    Updated: 2025/12/09 12:18:54 by omizin           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,7 @@ CFLAGS = -Wall -Wextra -Werror -std=c++17 $(INCLUDE)
 
 INCLUDE = -I$(INCS_DIR)
 
-SRCS = main.cpp ScalarConverter.cpp
+SRCS = main.cpp ScalarConverter.cpp isFunctions.cpp converters.cpp
 
 RM = rm -rf
 
