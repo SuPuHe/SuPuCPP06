@@ -6,7 +6,7 @@
 /*   By: omizin <omizin@student.42heilbronn.de>     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 12:56:41 by omizin            #+#    #+#             */
-/*   Updated: 2025/12/09 12:16:56 by omizin           ###   ########.fr       */
+/*   Updated: 2025/12/11 12:38:02 by omizin           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,15 +18,16 @@ void	ScalarConverter::convert(std::string const &literal)
 
 	if (isChar(literal))
 		convertFromChar(literal);
-	if (isPseudoFloat(literal))
+	else if (isPseudoFloat(literal))
 		convertFromPseudoFloat(literal);
-	if (isPseudoDouble(literal))
+	else if (isPseudoDouble(literal))
 		convertFromPseudoDouble(literal);
-	if (isInt(literal))
+	else if (isInt(literal))
 		convertFromInt(literal);
-	if (isFloat(literal))
+	else if (isFloat(literal))
 		convertFromFloat(literal);
-	if (isDouble(literal))
+	else if (isDouble(literal))
 		convertFromDouble(literal);
-	std::cout << IMPOSSIBLE_MSG << std::endl;
+	else
+		std::cout << IMPOSSIBLE_MSG << std::endl;
 }
